@@ -1,3 +1,4 @@
 pydantic==2.12.5
 pytest==9.0.2
+allure-pytest==2.15.3
 selene==2.0.0rc9
