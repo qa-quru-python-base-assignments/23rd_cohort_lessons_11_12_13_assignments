@@ -1,0 +1,28 @@
+from selene.support.conditions import have
+
+from src.pages.registration_page import RegistrationPage
+
+
+def test_registration_form(browser, student):
+    (
+        RegistrationPage(browser)
+        .open()
+        .type_first_name(student.first_name)
+        .type_last_name(student.last_name)
+        .type_email(student.email)
+        .select_gender(student.gender)
+        .type_phone_number(student.phone_number)
+        .set_birthdate(student.birthdate)
+        .select_subjects(*student.subjects)
+        .select_hobbies(*student.hobbies)
+        .upload_picture(student.picture)
+        .type_address(student.address)
+        .select_state(student.state)
+        .select_city(student.city)
+        .click_on_submit()
+        .registered_student_info.should(
+            have.texts(
+                *student.expected_data_list()
+            )
+        )
+    )
