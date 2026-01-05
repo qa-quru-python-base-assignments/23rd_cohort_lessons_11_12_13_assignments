@@ -2,6 +2,8 @@ from datetime import date
 
 import pytest
 import selene
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import Remote
 
 from src.models.city import City
 from src.models.gender import Gender
@@ -11,10 +13,22 @@ from src.models.student import Student
 from src.models.subject import Subject
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def browser():
+    options = Options()
+    options.set_capability("browserName", "chrome")
+    options.set_capability("browserVersion", "128.0")
+    options.set_capability("selenoid:options", {
+        "enableVNC": True,
+        "enableVideo": True
+    })
+    driver = Remote(
+        command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+        options=options
+    )
+    selene.browser.config.driver = driver
+
     selene.browser.config.base_url = "https://demoqa.com"
-    selene.browser.driver.maximize_window()
     yield selene.browser
     selene.browser.quit()
 
