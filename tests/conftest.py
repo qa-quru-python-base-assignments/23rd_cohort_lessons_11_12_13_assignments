@@ -11,6 +11,7 @@ from src.models.hobbies import Hobby
 from src.models.state import State
 from src.models.student import Student
 from src.models.subject import Subject
+from src.utils import attach
 
 
 @pytest.fixture()
@@ -29,7 +30,14 @@ def browser():
     selene.browser.config.driver = driver
 
     selene.browser.config.base_url = "https://demoqa.com"
+
     yield selene.browser
+
+    attach.add_screenshot(selene.browser)
+    attach.add_logs(selene.browser)
+    attach.add_html(selene.browser)
+    attach.add_video(selene.browser)
+
     selene.browser.quit()
 
 
