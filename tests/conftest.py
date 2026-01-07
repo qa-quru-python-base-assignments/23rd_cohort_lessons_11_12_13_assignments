@@ -16,6 +16,20 @@ from src.models.subject import Subject
 from src.utils import attach
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--chrome_version",
+        action="store",
+        default="128.0",
+        help="Версия браузера Google Chrome"
+    )
+
+
+@pytest.fixture(scope="session")
+def chrome_version(request):
+    return request.config.getoption("--chrome_version")
+
+
 @pytest.fixture(scope="session")
 def selenoid_settings():
     load_dotenv()
@@ -28,10 +42,10 @@ def selenoid_settings():
 
 
 @pytest.fixture()
-def browser(selenoid_settings):
+def browser(selenoid_settings, chrome_version):
     options = Options()
     options.set_capability("browserName", "chrome")
-    options.set_capability("browserVersion", "128.0")
+    options.set_capability("browserVersion", chrome_version)
     options.set_capability("selenoid:options", {
         "enableVNC": True,
         "enableVideo": True
