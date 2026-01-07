@@ -1,7 +1,9 @@
+import os
 from datetime import date
 
 import pytest
 import selene
+from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import Remote
 
@@ -14,8 +16,19 @@ from src.models.subject import Subject
 from src.utils import attach
 
 
+@pytest.fixture(scope="session")
+def selenoid_settings():
+    load_dotenv()
+
+    return {
+        "host": os.getenv("SELENOID_HOST"),
+        "login": os.getenv("SELENOID_LOGIN"),
+        "password": os.getenv("SELENOID_PASSWORD")
+    }
+
+
 @pytest.fixture()
-def browser():
+def browser(selenoid_settings):
     options = Options()
     options.set_capability("browserName", "chrome")
     options.set_capability("browserVersion", "128.0")
@@ -23,8 +36,9 @@ def browser():
         "enableVNC": True,
         "enableVideo": True
     })
+    host, login, password = selenoid_settings.values()
     driver = Remote(
-        command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+        command_executor=f"https://{login}:{password}@{host}/wd/hub",
         options=options
     )
     selene.browser.config.driver = driver
