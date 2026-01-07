@@ -1,11 +1,13 @@
+import allure
 from selene.support.conditions import have
 
 from src.pages.registration_page import RegistrationPage
 
 
 def test_registration_form(browser, student):
+    registration_page = RegistrationPage(browser)
     (
-        RegistrationPage(browser)
+        registration_page
         .open()
         .type_first_name(student.first_name)
         .type_last_name(student.last_name)
@@ -20,9 +22,10 @@ def test_registration_form(browser, student):
         .select_state(student.state)
         .select_city(student.city)
         .click_on_submit()
-        .registered_student_info.should(
+    )
+    with allure.step("Проверить результат заполнения формы"):
+        registration_page.registered_student_info.should(
             have.texts(
                 *student.expected_data_list()
             )
         )
-    )
