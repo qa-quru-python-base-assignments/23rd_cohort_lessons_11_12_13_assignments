@@ -52,11 +52,19 @@ class RegistrationPage:
 
     @allure.step("Установить дату рождения")
     def set_birthdate(self, value: date) -> RegistrationPage:
-        day, month, year = f"{value.day} {value.strftime('%B')} {value.year}".split()
+        day = value.day
+        month = value.strftime('%B')
+        year = value.year
+        
+        if 4 <= day <= 20 or 24 <= day <= 30:
+            suffix = "th"
+        else:
+            suffix = ["st", "nd", "rd"][day % 10 - 1]
+            
         self.browser.element("#dateOfBirthInput").click()
-        self.browser.element(".react-datepicker__year-select").type(year)
+        self.browser.element(".react-datepicker__year-select").type(str(year))
         self.browser.element(".react-datepicker__month-select").type(month)
-        self.browser.element(f"[aria-label*='{month} {day}st']").click()
+        self.browser.element(f"[aria-label*='{month} {day}{suffix}']").click()
         return self
 
     @allure.step("Выбрать предметы")

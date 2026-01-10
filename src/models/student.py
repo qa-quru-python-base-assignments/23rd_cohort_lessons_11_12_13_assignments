@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -12,27 +13,27 @@ from src.models.subject import Subject
 class Student(BaseModel):
     first_name: str
     last_name: str
-    email: str
+    email: Optional[str] = None
     gender: Gender
     phone_number: str
     birthdate: date
-    subjects: list[Subject]
-    hobbies: list[Hobby]
-    picture: str
-    address: str
-    state: State
-    city: City
+    subjects: list[Subject] = []
+    hobbies: list[Hobby] = []
+    picture: Optional[str] = None
+    address: Optional[str] = None
+    state: Optional[State] = None
+    city: Optional[City] = None
 
     def expected_data_list(self) -> list[str | Gender]:
         return [
             f"{self.first_name} {self.last_name}",
-            self.email,
+            self.email or "",
             self.gender,
             self.phone_number,
             f"{self.birthdate.day} {self.birthdate.strftime('%B')},{self.birthdate.year}",
             ", ".join(self.subjects),
             ", ".join(self.hobbies),
-            self.picture,
-            self.address,
-            f"{self.state} {self.city}"
+            self.picture or "",
+            self.address or "",
+            f"{self.state} {self.city}" if self.state and self.city else ""
         ]
