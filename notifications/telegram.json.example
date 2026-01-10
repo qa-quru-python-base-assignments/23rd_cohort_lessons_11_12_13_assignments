@@ -1,0 +1,16 @@
+{
+  "base": {
+    "project": "DemoQA Registration Form",
+    "environment": "PROD",
+    "comment": "",
+    "reportLink": "",
+    "language": "en",
+    "allureFolder": "allure-report",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "REPLACE WITH BOT API KEY",
+    "chat": "REPLACE WITH CHAT ID",
+    "replyTo": ""
+  }
+}
